@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Weather App</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.6.2/css/bulma.css" />
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+    <section class="hero is-info">
+        <div class="hero-body">
+            <div class="container-fluid">
+              <ul class="nav nav-pills">
+                  <h1 class="navbar-header">
+                      Погодний додаток)
+                  </h1>
+                {% if request.user.is_authenticated %}
+                  <div class="nav navbar-nav navbar-right ">
+                    {% url 'logout_page' as url_logout_page %}
+                    <a class="btn btn-danger ml-5" href="{{url_logout_page}}"> Вийти</a>
+                  </div>
+                {% else %}
+                  <div class="nav navbar-nav ml-5">
+                    {% url 'register_page' as url_register_page %}
+                    <a class="btn btn-warning ml-5" href="{{url_register_page}}"> Реєстрація</a>
+                  </div>
+                  <div class="nav navbar-nav ml-5">
+                    {% url 'login_page' as url_login_page %}
+                    <a class="btn btn-warning ml-5" href="{{url_login_page}}"> Авторизація</a>
+                  </div>
+                {% endif %}
+                  <div class="nav navbar-nav  ml-5 pl-5">
+                    <div class = "btn btn-success ml-5 ">
+                      {{request.user}}
+                    </div>
+                </div>
+              </ul>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    <form method="POST">
+                        {% csrf_token %}
+                        <div class="field has-addons">
+                            <div class="control is-expanded">
+                                {{ form.name }}
+                            </div>
+                            <div class="control">
+                                <button type="submit" class="button is-info">
+                                    Add City
+                                </button>
+                            </div>
+                        </div>
+												{% if message %}
+														<div class="notification {{ message_class }}">{{ message }}</div>
+												{% endif %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </section>
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-offset-4 is-4">
+                    {% for city_weather in weather_data %}
+                    <div class="box">
+                        <article class="media">
+                            <div class="media-left">
+                                <figure class="image is-50x50">
+                                    <img src="http://openweathermap.org/img/w/{{ city_weather.icon }}.png" alt="Image">
+                                </figure>
+                            </div>
+                            <div class="media-content">
+                                <div class="content">
+                                    <p>
+																			<div class="col-20">
+																				<span class="title">{{ city_weather.city }}</span>
+																				<br>
+																				<b>Температура:</b> {{ city_weather.temp }}<sup>o</sup><br>
+																				<b>Тиск:</b> {{ city_weather.pressure }} мм<br>
+																				<b>Вологість:</b> {{ city_weather.humidity }} %<br>
+																				<b>Вітер:</b> {{ city_weather.wind }} м/с<br>
+																			</div>
+                                    </p>
+                                </div>
+																<div class="message_about_city bg-light p-2 border border-danger rounded">
+                                  <div class="">
+  																	<b>Message:</b><br>
+  																	<b>В </b> {{ city_weather.city }}
+  																	<b>{{ city_weather.descript_2}}</b><br>
+                                    <div class="fine_message">{{ city_weather.message_about_weather }}</div>
+                                  </div>
+																</div>
+																<div class=" mt-2 float-right">
+  																	<a href ="{% url 'delete_city' city_weather.city %}">
+  																		 <button class="delete"></button>
+  																	</a>
+																<div>
+                            </div>
+                        </article>
+                    </div>
+                  {% endfor %}
+                </div>
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    </footer>
+</body>
+
+</html>

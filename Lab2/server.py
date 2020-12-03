@@ -4,6 +4,9 @@ from datetime import datetime
 import time
 import json
 
+#AF_INET = формат адреса, интернет = IP-адреса
+#AF_INET-это семейство адресов, которое используется для создаваемого сокета (в данном случае адрес интернет-протокола)
+#SOCK_STREAM (надёжная потокоориентированная служба (сервис) или потоковый сокет)
 server = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
 #Даємо серверу адрес за яким до нас будуть приєднуватися
@@ -20,7 +23,9 @@ users = [] #Зберігає user_socket
 def vuvid(user_data):
     for i in range (0,len(users)):
         ur_sk = users[i]
-        x = json.dumps(user_data) 
+        #преобразовать его в строку JSON с помощью метода json.dumps()
+        # конвертируем в JSON
+        x = json.dumps(user_data) # в результате получаем строк JSON:
         ur_sk.send(x.encode("utf-8"))
         i +=1
 
@@ -55,6 +60,7 @@ def start_server():
             user_socket.send("You are connected".encode("utf-8")) 
             #Щоб відправляти всім клієнтам дані
             users.append(user_socket)
+            #Thread — это отдельный поток выполнения. Это означает, что в вашей программе могут работать две и более подпрограммы одновременно.
             countdown_thread = threading.Thread(target = count_down, args = (user_data,))
             countdown_thread.start() 
         
@@ -76,3 +82,5 @@ def start_server():
     
 if __name__=="__main__":
     start_server()
+
+#cd WebLab_backend
