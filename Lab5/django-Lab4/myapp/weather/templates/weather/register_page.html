@@ -1,0 +1,15 @@
+<head>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" />
+</head>
+<body>
+  <div class="container bg-light">
+    <h1 class="mt-5 ">Регістрація</h1>
+    <div class="col-6 ">
+      <form id="add_form" method="post">
+        {% csrf_token %}
+        <p class="font-italic">{{ form }}</p>
+        <button form="add_form" type="submit" class=" mt-2 btn btn-primary"> Додати </button>
+      </form>
+    </div>
+  </div>
+</body>

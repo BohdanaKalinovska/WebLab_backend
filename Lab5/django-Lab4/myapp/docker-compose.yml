@@ -1,0 +1,68 @@
+version: '3.9'
+services:
+  db:
+    image: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      - POSTGRES_DB=postgres
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  redis:
+    image: "redis:alpine"
+    command: redis-server
+    ports:
+      - "6379:6379"
+  web:
+    build: .
+    image: weatherapp:latest
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "3000:3000"
+      - "8000:8000"
+    depends_on:
+      - migration
+      - redis
+      - db
+  migration:
+    image: weatherapp:latest
+    command: python manage.py migrate --noinput
+    volumes:
+      - .:/code
+    depends_on:
+      - db
+
+
+
+
+
+
+
+
+
+
+
+
+      
+#web:
+#    build: .
+#    image: weatherapp:latest
+#    #"./wait-for-it.sh", "db:5432", "--", 
+#    command: bash -c "sleep 15; python manage.py runserver 0.0.0.0:8000"
+#    ports:
+#      - "8000:8000"
+#    depends_on:
+#      - redis
+#      - db
+
+#depends_on:
+#      - migration
+#      - redis
+#      - db
+#  migration:
+#    image: weatherapp:latest
+#    command: python manage.py migrate --noinput
+#    volumes:
+#      - .:/code
+#    depends_on:
+#      - db
